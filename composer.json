@@ -1,0 +1,21 @@
+{
+    "name": "backend/viver",
+    "description": "Teste tecnico backend viver",
+    "authors": [
+        {
+            "name": "Alisson Pospor",
+            "email": "ali_pospor@hotmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "3.0",
+        "doctrine/orm": "2.7",
+        "firebase/php-jwt": "5.2",
+        "slim/psr7": "1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "./src"
+          }
+    }
+}

@@ -42,10 +42,3 @@ $container['notFoundHandler'] = function ($container) {
             ->withJson(['message' => 'Page not found']);
     };
 };
-
-
-/**
- * Token do JWT
- * secret key é batata em md5
- */
-$container['secretkey'] = "9eb71ab7420eb452a22787ca4fab501b";

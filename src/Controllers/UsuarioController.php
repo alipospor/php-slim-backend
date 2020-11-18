@@ -4,17 +4,42 @@ namespace App\Controllers;
 
 use App\Helpers\EntityHelper;
 use App\Models\Usuario;
-use Doctrine\DBAL\Types\ArrayType;
+use App\Services\Jwt\JwtService;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class UsuarioController extends EntityHelper
+class UsuarioController
 {
-    public $entity;
+    private $entity;
 
     public function __construct()
     {
         $this->entity = (new EntityHelper())->getEntity();
+    }
+
+    /**
+     * Login usuario
+     * @param [type] $request
+     * @param [type] $response
+     * @param [type] $args
+     * @return Response
+     */
+    public function login($request, $response, $args): Response
+    {
+        $parametro = $request->getParsedBody();
+
+        $usuario = $this->getRepo()->findOneBy(array('senha' => $parametro['senha'], 'email' => $parametro['email']));
+
+        if (!is_null($usuario)) {
+            $jwt =  JwtService::encode($parametro);
+
+            var_dump($jwt);
+            return  $response->withJson(true, 200)
+                ->withHeader('Content-type', 'application/json');
+        }
+
+        return  $response->withJson(false, 200)
+            ->withHeader('Content-type', 'application/json');
     }
 
     /**
@@ -28,12 +53,33 @@ class UsuarioController extends EntityHelper
     {
         $usuarios = $this->getRepo()->findAll();
 
+        var_dump($usuarios);
         if (is_null($usuarios)) {
             return  $response->withJson("There are no user records", 404)
                 ->withHeader('Content-type', 'application/json');
         }
 
         return  $response->withJson($usuarios, 200)
+            ->withHeader('Content-type', 'application/json');
+    }
+
+    /**
+     * Listagem usuario
+     * @param [type] $request
+     * @param [type] $response
+     * @param [type] $args
+     * @return Response
+     */
+    public function selectById($request, $response, $args)
+    {
+        $usuario = $this->getRepo()->find($args['id']);
+
+        if (is_null($usuario)) {
+            return  $response->withJson("User not Found", 404)
+                ->withHeader('Content-type', 'application/json');
+        }
+
+        return  $response->withJson($usuario, 200)
             ->withHeader('Content-type', 'application/json');
     }
 
@@ -76,7 +122,7 @@ class UsuarioController extends EntityHelper
      * @param [type] $args
      * @return Response
      */
-    public function cadastro($request, $response, $args)
+    public function insert($request, $response, $args)
     {
         /* Recebe o objeto que sera alterado */
         $parametro = $request->getParsedBody();
@@ -109,7 +155,7 @@ class UsuarioController extends EntityHelper
             ->withHeader('Content-type', 'application/json');
     }
     /**
-     * Cadastro usuario
+     * Deleta usuario
      * @param [type] $request
      * @param [type] $response
      * @param [type] $args

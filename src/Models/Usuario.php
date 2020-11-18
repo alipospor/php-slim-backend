@@ -13,22 +13,22 @@ class Usuario
      * @Column(name="`id`", type="integer") 
      * @GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @Column(name="`nome`", type="string") 
      */
-    protected $nome;
+    private $nome;
 
     /**
      * @Column(name="`senha`", type="string") 
      */
-    protected $senha;
+    private $senha;
 
     /**
      * @Column(name="`email`", type="string") 
      */
-    protected $email;
+    private $email;
 
 
     /* Getters e setters */
